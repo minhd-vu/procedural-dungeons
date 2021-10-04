@@ -1,5 +1,5 @@
 CC   = g++
-OPTS = -O0
+OPTS = -O0 -std=c++17
 DEBUG = -g
 
 SRC_DIR = ./src
