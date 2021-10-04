@@ -4,6 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include "TileMap.hpp"
 #include "Player.hpp"
+#include <vector>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 class Game
 {
@@ -16,7 +20,7 @@ private:
     void update(sf::Time deltaTime);
     void render();
     void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-    int* generateLevel(sf::Vector2u size);
+    int *generateLevel(sf::Vector2u size);
 
     sf::RenderWindow mWindow;
     sf::View view;
