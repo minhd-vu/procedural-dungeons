@@ -8,6 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <algorithm>
+#include <array>
+#include <random>
+#include <chrono>
+#include <stack>
+#include <fstream>
 
 class Game
 {
@@ -20,7 +26,6 @@ private:
     void update(sf::Time deltaTime);
     void render();
     void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-    int *generateLevel(sf::Vector2u size);
 
     sf::RenderWindow mWindow;
     sf::View view;

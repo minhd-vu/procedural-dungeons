@@ -2,11 +2,30 @@
 
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
+int *loadLevel(std::string filename)
+{
+    std::vector<int> numbers;
+    std::ifstream in(filename, std::ios::in);
+
+    int number;
+
+    while (in >> number)
+    {
+        numbers.push_back(number);
+    }
+    
+    in.close();
+    std::cout << numbers.size() << "\n";
+    int* level = new int[numbers.size()];
+    std::copy(numbers.begin(), numbers.end(), level);
+    return level;
+}
+
 Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 {
     // define the level with an array of tile indices
     sf::Vector2u levelSize(50, 50);
-    const int *level = generateLevel(levelSize);
+    const int *level = loadLevel("level.txt");
 
     player.load("images/birb.png", sf::Vector2f(32.f, 32.f));
     view = sf::View(sf::FloatRect(0.f, 0.f, 1600.f, 1600.f));
@@ -14,74 +33,6 @@ Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
     // create the tilemap from the level definition
     if (!map.load("images/tileset.png", sf::Vector2u(32, 32), level, levelSize.x, levelSize.y))
         return;
-}
-
-int *Game::generateLevel(sf::Vector2u size)
-{
-    std::vector<sf::IntRect> rooms;
-    int scale = 7;
-
-    for (int i = 0; i < 50; i++)
-    {
-        int width = rand() % size.x / scale + 2;
-        int height = rand() % size.y / scale + 2;
-        sf::IntRect room(rand() % (size.x - width), rand() % (size.y - height), width, height);
-        // std::cout << room.top << " " << room.left << " " << room.width << " " << room.height << "\n";
-
-        bool intersects = false;
-        for (auto r : rooms)
-        {
-            if (r.intersects(room))
-            {
-                intersects = true;
-                break;
-            }
-        }
-
-        if (!intersects)
-        {
-            rooms.push_back(room);
-        }
-    }
-
-    int *level = new int[size.x * size.y];
-    for (int i = 0; i < size.x; i++)
-    {
-        for (int j = 0; j < size.x; j++)
-        {
-            *(level + i * size.y + j) = 0;
-        }
-    }
-
-    for (auto r : rooms)
-    {
-        for (int i = r.left; i < r.left + r.width; i++)
-        {
-            for (int j = r.top; j < r.top + r.height; j++)
-            {
-                *(level + i * size.y + j) = 1;
-            }
-        }
-    }
-
-    int start = rand() % ((size.x - 1) * (size.y - 1) + size.y);
-
-    while (level[start] == 1 ||
-           level[start + 1] == 1 ||
-           level[start - 1] == 1 ||
-           level[start + size.y] == 1 ||
-           level[start - size.y] == 1 ||
-           level[start + size.y + 1] == 1 ||
-           level[start - size.y + 1] == 1 ||
-           level[start + size.y - 1] == 1 ||
-           level[start - size.y - 1] == 1)
-    {
-        start = rand() % (size.x * size.y);
-    }
-
-    level[start] = 3;
-
-    return level;
 }
 
 void Game::Run()
