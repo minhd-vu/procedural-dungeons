@@ -48,40 +48,60 @@ class Rectangle:
             self.y <= y <= self.y + self.height
         )
 
+    def corner(self, x: int, y: int) -> bool:
+        # check if a point is a corner
+        return (
+            (x == self.x and y == self.y) or
+            (x == self.x and y == self.y + self.height - 1) or
+            (x == self.x + self.width - 1 and y == self.y) or
+            (x == self.x + self.width - 1 and y == self.y + self.height - 1)
+        )
+
     def __str__(self) -> str:
         return f'Rectangle({self.x},{self.y},{self.width},{self.height})'
 
 
 def get_neighbors(level: list, x: int, y: int):
     # get all neighbors of the given tile that are not conflicting
-
     neighbors = list()
+
     # right
-    if x + 1 < size[0] and not level[x + 1][y]:
+    if x + 1 < size[0]:
         neighbors.append((x + 1, y))
     # left
-    if x - 1 < 0 and not level[x - 1][y]:
+    if x - 1 >= 0:
         neighbors.append((x - 1, y))
     # up
-    if y - 1 < 0 and not level[x][y - 1]:
+    if y - 1 >= 0:
         neighbors.append((x, y - 1))
     # down
-    if y + 1 < size[1] and not level[x][y + 1]:
+    if y + 1 < size[1]:
         neighbors.append((x, y + 1))
-    return neighbors
 
-# recursive depth first search to determine the corridors
+    return neighbors
 
 
 def recursive_dfs(level: list, x: int, y: int, init=False) -> None:
+    # recursive depth first search to determine the paths
     level[x][y] = 3
     neighbors = get_neighbors(level, x, y)
     # choose a random direction to go in
     random.shuffle(neighbors)
     for neighbor in neighbors:
-        recursive_dfs(level, neighbor[0], neighbor[1])
-        # break because we only want to go in one direction
-        break
+        if not level[neighbor[0]][neighbor[1]]:
+            recursive_dfs(level, neighbor[0], neighbor[1])
+            # break because we only want to go in one direction
+            break
+
+
+def create_door(level: list, room: Rectangle) -> None:
+    for i in range(room.x, room.x + room.width):
+        for j in range(room.y, room.y + room.height):
+            if level[i][j] == 2 and not room.corner(i, j):
+                for neighbor in get_neighbors(level, i, j):
+                    if level[neighbor[0]][neighbor[1]] == 3:
+                        level[i][j] = 3
+                        return
 
 
 def room_contains(rooms: list, x: int, y: int) -> bool:
@@ -131,7 +151,7 @@ def generate_level() -> str:
                 else:
                     level[i][j] = 1
 
-    # create the corridors
+    # create the paths
     for i in range(size[0]):
         x = random.randrange(2, size[0] - room_size[0] - 1)
         y = random.randrange(2, size[1] - room_size[1] - 1)
@@ -139,6 +159,25 @@ def generate_level() -> str:
         if (room_contains(rooms, x, y)):
             starts.append((x, y))
             recursive_dfs(level, x, y)
+
+    for room in rooms:
+        # create the doors
+        create_door(level, room)
+
+        # clear borders
+        for i in range(room.x, room.x + room.width):
+            for j in range(room.y, room.y + room.height):
+                if level[i][j] == 2:
+                    level[i][j] = 0
+
+
+    # add in booby traps
+    for i in range(size[0]):
+        x = random.randrange(2, size[0] - room_size[0] - 1)
+        y = random.randrange(2, size[1] - room_size[1] - 1)
+
+        if (level[x][y]):
+            level[x][y] = 2
 
     # determine where the player starts
     # the player will always start somewhere that is has a path
