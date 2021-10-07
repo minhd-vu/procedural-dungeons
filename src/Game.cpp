@@ -1,31 +1,28 @@
 #include "Game.hpp"
 
-const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
-
-void Game::loadLevel(std::string filename)
-{
-    std::ifstream in(filename, std::ios::in);
-
-    int number;
-
-    while (in >> number)
-    {
-        level.push_back(number);
-    }
-
-    in.close();
-}
+const sf::Time Game::TimePerFrame = sf::seconds(1.f / 12.f);
 
 Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 {
     // define the level with an array of tile indices
-    loadLevel("level.txt");
     player.load("images/birb.png", sf::Vector2f(32.f, 32.f));
-    view = sf::View(sf::FloatRect(0.f, 0.f, 1600.f, 1600.f));
+    view = sf::View(sf::FloatRect(0.f, 0.f, 256.f, 256.f));
 
     // create the tilemap from the level definition
-    if (!map.load("images/tileset.png", sf::Vector2u(32, 32), level, 50, 50))
+    if (!map.load("images/tileset.png", sf::Vector2u(32, 32), "level.txt", 50, 50))
         return;
+
+    // set the player position
+    for (int i = 0; i < map.getWidth(); i++)
+    {
+        for (int j = 0; j < map.getHeight(); j++)
+        {
+            if (map.getTiles()[i + j * map.getWidth()] == 9)
+            {
+                player.getSprite().setPosition(i * map.getTileSize().x, j * map.getTileSize().y);
+            }
+        }
+    }
 }
 
 void Game::Run()
@@ -72,13 +69,13 @@ void Game::processEvents()
 void Game::update(sf::Time deltaTime)
 {
     // TODO: Update your objects here
-    player.update();
+    player.update(map);
 }
 
 void Game::render()
 {
     mWindow.clear();
-    // view.setCenter(player.getCenter());
+    view.setCenter(player.getCenter());
     mWindow.setView(view);
 
     // TODO: Draw your objects here
