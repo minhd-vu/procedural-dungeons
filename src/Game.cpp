@@ -2,36 +2,29 @@
 
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
-int *loadLevel(std::string filename)
+void Game::loadLevel(std::string filename)
 {
-    std::vector<int> numbers;
     std::ifstream in(filename, std::ios::in);
 
     int number;
 
     while (in >> number)
     {
-        numbers.push_back(number);
+        level.push_back(number);
     }
-    
+
     in.close();
-    std::cout << numbers.size() << "\n";
-    int* level = new int[numbers.size()];
-    std::copy(numbers.begin(), numbers.end(), level);
-    return level;
 }
 
 Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 {
     // define the level with an array of tile indices
-    sf::Vector2u levelSize(50, 50);
-    const int *level = loadLevel("level.txt");
-
+    loadLevel("level.txt");
     player.load("images/birb.png", sf::Vector2f(32.f, 32.f));
     view = sf::View(sf::FloatRect(0.f, 0.f, 1600.f, 1600.f));
 
     // create the tilemap from the level definition
-    if (!map.load("images/tileset.png", sf::Vector2u(32, 32), level, levelSize.x, levelSize.y))
+    if (!map.load("images/tileset.png", sf::Vector2u(32, 32), level, 50, 50))
         return;
 }
 
