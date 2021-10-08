@@ -19,7 +19,7 @@ room_sizes = [
 
 
 class Rectangle:
-    def __init__(self, x: int, y: int, width: int, height: int):
+    def __init__(self, x: int, y: int, width: int, height: int) -> None:
         self.x = x
         self.y = y
         self.width = width
@@ -61,9 +61,9 @@ class Rectangle:
         return f'Rectangle({self.x},{self.y},{self.width},{self.height})'
 
 
-def get_neighbors(level: list, x: int, y: int):
+def get_neighbors(level: list[int], x: int, y: int) -> list[tuple[int]]:
     # get all neighbors of the given tile that are not conflicting
-    neighbors = list()
+    neighbors = list[tuple[int]]()
 
     # right
     if x + 1 < size[0]:
@@ -81,7 +81,7 @@ def get_neighbors(level: list, x: int, y: int):
     return neighbors
 
 
-def recursive_dfs(level: list, x: int, y: int, init=False) -> None:
+def recursive_dfs(level: list[int], x: int, y: int, init: bool = False) -> None:
     # recursive depth first search to determine the paths
     level[x][y] = 3
     neighbors = get_neighbors(level, x, y)
@@ -94,7 +94,7 @@ def recursive_dfs(level: list, x: int, y: int, init=False) -> None:
             break
 
 
-def find_path(level: list, x: int, y: int, end_x: int, end_y: int, visited: list):
+def find_path(level: list[int], x: int, y: int, end_x: int, end_y: int, visited: list[bool]) -> bool:
     visited[x][y] = True
     neighbors = get_neighbors(level, x, y)
 
@@ -106,7 +106,7 @@ def find_path(level: list, x: int, y: int, end_x: int, end_y: int, visited: list
     return False
 
 
-def create_door(level: list, room: Rectangle) -> None:
+def create_door(level: list[int], room: Rectangle) -> None:
     for i in range(room.x, room.x + room.width):
         for j in range(room.y, room.y + room.height):
             if level[i][j] == 2 and not room.corner(i, j):
@@ -116,11 +116,11 @@ def create_door(level: list, room: Rectangle) -> None:
                         return
 
 
-def room_contains(rooms: list, x: int, y: int) -> bool:
+def room_contains(rooms: list[Rectangle], x: int, y: int) -> bool:
     return all([not room.contains(x, y) for room in rooms])
 
 
-def random_goal(rooms: list):
+def random_goal(rooms: list[Rectangle]) -> tuple[int]:
     rand_room = rooms[random.randrange(len(rooms))]
     x = random.randrange(rand_room.x + 1, rand_room.x + rand_room.width - 1)
     y = random.randrange(rand_room.y + 1, rand_room.y + rand_room.height - 1)
@@ -203,18 +203,18 @@ def generate_level() -> str:
     level[start[0]][start[1]] = 9
 
     # determine the goal tile
-    visited = [[False for i in range(size[0])] for j in range(size[1])]
-    goal = random_goal(rooms)
 
     # ensure that there is a path to the goal tile
-    while(not find_path(level, start[0], start[1], goal[0], goal[1], visited)):
+    for i in range(10):
         visited = [[False for i in range(size[0])] for j in range(size[1])]
         goal = random_goal(rooms)
 
-    level[goal[0]][goal[1]] = 4
+        if find_path(level, start[0], start[1], goal[0], goal[1], visited):
+            level[goal[0]][goal[1]] = 4
+            # create the text file string
+            return '\n'.join([' '.join([str(i) for i in row]) for row in level])
 
-    # create the text file string
-    return '\n'.join([' '.join([str(i) for i in row]) for row in level])
+    return generate_level()
 
 
 # use for help with cli interaction
