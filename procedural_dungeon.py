@@ -205,7 +205,7 @@ def generate_level() -> str:
     # determine the goal tile
 
     # ensure that there is a path to the goal tile
-    for i in range(10):
+    for i in range(size[0]):
         visited = [[False for i in range(size[0])] for j in range(size[1])]
         goal = random_goal(rooms)
 
