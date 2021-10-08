@@ -36,7 +36,8 @@ void Player::update(TileMap &map)
         x += speed;
     }
 
-    bool collision = false;
+    bool collision_x = false;
+    bool collision_y = false;
 
     int i = sprite.getPosition().x / map.getTileSize().x;
     int j = sprite.getPosition().y / map.getTileSize().y;
@@ -61,21 +62,31 @@ void Player::update(TileMap &map)
             auto vertex = map.getVertices()[i * 4];
             sf::FloatRect tile(vertex.position, (sf::Vector2f)map.getTileSize());
 
-            sf::FloatRect bounds = sprite.getGlobalBounds();
-            bounds.left += x;
-            bounds.top += y;
+            sf::FloatRect bounds_x = sprite.getGlobalBounds();
+            sf::FloatRect bounds_y = sprite.getGlobalBounds();
+            bounds_x.left += x;
+            bounds_y.top += y;
 
-            if (bounds.intersects(tile))
+            if (bounds_x.intersects(tile))
             {
-                collision = true;
-                break;
+                collision_x = true;
+            }
+
+            if (bounds_y.intersects(tile))
+            {
+                collision_y = true;
             }
         }
     }
 
     // std::cout << "x " << bounds.left << " y " << bounds.top << " " << collision << "\n";
-    if (!collision)
+    if (!collision_x)
     {
-        sprite.move(x, y);
+        sprite.move(x, 0);
+    }
+
+    if (!collision_y)
+    {
+        sprite.move(0, y);
     }
 }
