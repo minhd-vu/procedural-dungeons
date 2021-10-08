@@ -47,11 +47,23 @@ public:
         return movementFlags;
     }
 
+    sf::Vector2u getPostion()
+    {
+        return position;
+    }
+
+    void setPosition(unsigned int x, unsigned int y)
+    {
+        position.x = x;
+        position.y = y;
+    }
+
 private:
-    float speed;
+    unsigned int speed;
     bool movementFlags[DIRECTION_SIZE] = {false};
     sf::Texture texture;
     sf::Sprite sprite;
+    sf::Vector2u position;
 };
 
 #endif
