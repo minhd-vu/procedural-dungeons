@@ -92,6 +92,11 @@ public:
         return tiles;
     }
 
+    sf::VertexArray getVertices() const
+    {
+        return m_vertices;
+    }
+
 private:
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
     {

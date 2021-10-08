@@ -1,11 +1,11 @@
 #include "Game.hpp"
 
-const sf::Time Game::TimePerFrame = sf::seconds(1.f / 12.f);
+const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 {
     // define the level with an array of tile indices
-    player.load("images/birb.png", sf::Vector2f(32.f, 32.f));
+    player.load("images/birb.png", sf::Vector2f(28.f, 28.f));
     view = sf::View(sf::FloatRect(0.f, 0.f, 256.f, 256.f));
 
     // create the tilemap from the level definition
