@@ -94,6 +94,18 @@ def recursive_dfs(level: list, x: int, y: int, init=False) -> None:
             break
 
 
+def find_path(level: list, x: int, y: int, end_x: int, end_y: int, visited: list):
+    visited[x][y] = True
+    neighbors = get_neighbors(level, x, y)
+
+    for neighbor in neighbors:
+        if end_x == neighbor[0] and end_y == neighbor[1]:
+            return True
+        elif level[neighbor[0]][neighbor[1]] and not visited[neighbor[0]][neighbor[1]]:
+            return find_path(level, neighbor[0], neighbor[1], end_x, end_y, visited)
+    return False
+
+
 def create_door(level: list, room: Rectangle) -> None:
     for i in range(room.x, room.x + room.width):
         for j in range(room.y, room.y + room.height):
@@ -106,6 +118,13 @@ def create_door(level: list, room: Rectangle) -> None:
 
 def room_contains(rooms: list, x: int, y: int) -> bool:
     return all([not room.contains(x, y) for room in rooms])
+
+
+def random_goal(rooms: list):
+    rand_room = rooms[random.randrange(len(rooms))]
+    x = random.randrange(rand_room.x + 1, rand_room.x + rand_room.width - 1)
+    y = random.randrange(rand_room.y + 1, rand_room.y + rand_room.height - 1)
+    return (x, y)
 
 
 def generate_level() -> str:
@@ -170,7 +189,6 @@ def generate_level() -> str:
                 if level[i][j] == 2:
                     level[i][j] = 0
 
-
     # add in booby traps
     for i in range(size[0]):
         x = random.randrange(2, size[0] - room_size[0] - 1)
@@ -183,6 +201,17 @@ def generate_level() -> str:
     # the player will always start somewhere that is has a path
     start = starts[random.randrange(len(starts))]
     level[start[0]][start[1]] = 9
+
+    # determine the goal tile
+    visited = [[False for i in range(size[0])] for j in range(size[1])]
+    goal = random_goal(rooms)
+
+    # ensure that there is a path to the goal tile
+    while(not find_path(level, start[0], start[1], goal[0], goal[1], visited)):
+        visited = [[False for i in range(size[0])] for j in range(size[1])]
+        goal = random_goal(rooms)
+
+    level[goal[0]][goal[1]] = 4
 
     # create the text file string
     return '\n'.join([' '.join([str(i) for i in row]) for row in level])
