@@ -1,5 +1,5 @@
 CC   = g++
-OPTS = -O0 -std=c++17
+OPTS = -O0 -std=c++17 -target x86_64-apple-darwin
 DEBUG = -g
 
 SRC_DIR = ./src
