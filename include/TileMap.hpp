@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include <math.h>
 
 // generate a tile map
 class TileMap : public sf::Drawable, public sf::Transformable
@@ -41,12 +42,17 @@ public:
             for (unsigned int j = 0; j < height; ++j)
             {
                 // get the current tile number
-                int tileNumber = tiles[i + j * width];
+                int index = i + j * width;
+                int tileNumber = tiles[index];
 
                 // hardcode here to determine where the player spawns
                 if (tileNumber == 9)
                 {
                     tileNumber = 3;
+                }
+                else if (tileNumber == 4)
+                {
+                    goal = sf::Vector2u(i, j);
                 }
 
                 // find its position in the tileset texture
@@ -54,7 +60,7 @@ public:
                 int tv = tileNumber / (m_tileset.getSize().x / tileSize.x);
 
                 // get a pointer to the current tile's quad
-                sf::Vertex *quad = &m_vertices[(i + j * width) * 4];
+                sf::Vertex *quad = &m_vertices[index * 4];
 
                 // define its 4 corners
                 quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
@@ -97,9 +103,19 @@ public:
         return m_vertices;
     }
 
-    bool isValid(unsigned int x, unsigned int y)
+    bool isValid(int x, int y)
     {
-        return x < width && y < height && tiles[x + y * width];
+        return x >= 0 && y >= 0 && x < width && y < height && tiles[x + y * width];
+    }
+
+    bool isGoal(int x, int y)
+    {
+        return x == goal.x && y == goal.y;
+    }
+
+    double calculateH(int x, int y)
+    {
+        return sqrt((x - goal.x) * (x - goal.x) + (y - goal.y) * (y - goal.y));
     }
 
 private:
@@ -120,6 +136,7 @@ private:
     sf::Vector2u tileSize;
     unsigned int width, height;
     std::vector<int> tiles;
+    sf::Vector2u goal;
 };
 
 #endif //TILEMAP_H
