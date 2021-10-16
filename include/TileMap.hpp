@@ -97,6 +97,11 @@ public:
         return m_vertices;
     }
 
+    bool isValid(unsigned int x, unsigned int y)
+    {
+        return x < width && y < height && tiles[x + y * width];
+    }
+
 private:
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
     {

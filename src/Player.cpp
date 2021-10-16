@@ -45,6 +45,7 @@ void Player::update(TileMap &map)
     movementFlags[nodes.front()] = false;
     nodes.pop();
 
+    // condense this after pathfinding has been implemented
     if (x && map.getTiles()[position.x + x + position.y * map.getWidth()])
     {
         position.x += x;

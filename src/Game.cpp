@@ -25,17 +25,6 @@ Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
     }
 
     // a* pathfinding
-    player.getNodes().push(UP);
-    player.getNodes().push(UP);
-    player.getNodes().push(UP);
-    player.getNodes().push(DOWN);
-    player.getNodes().push(DOWN);
-    player.getNodes().push(DOWN);
-    player.getNodes().push(DOWN);
-    player.getNodes().push(LEFT);
-    player.getNodes().push(LEFT);
-    player.getNodes().push(LEFT);
-    player.getNodes().push(LEFT);
     std::cout << player.getNodes().size() << "\n";
 }
 
