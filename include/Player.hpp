@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 #include <iostream>
+#include <queue>
 #include "TileMap.hpp"
 
 enum Direction
@@ -58,9 +59,15 @@ public:
         position.y = y;
     }
 
+    std::queue<Direction> &getNodes()
+    {
+        return nodes;
+    }
+
 private:
     unsigned int speed;
     bool movementFlags[DIRECTION_SIZE] = {false};
+    std::queue<Direction> nodes;
     sf::Texture texture;
     sf::Sprite sprite;
     sf::Vector2u position;

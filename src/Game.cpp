@@ -23,6 +23,20 @@ Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
             }
         }
     }
+
+    // a* pathfinding
+    player.getNodes().push(UP);
+    player.getNodes().push(UP);
+    player.getNodes().push(UP);
+    player.getNodes().push(DOWN);
+    player.getNodes().push(DOWN);
+    player.getNodes().push(DOWN);
+    player.getNodes().push(DOWN);
+    player.getNodes().push(LEFT);
+    player.getNodes().push(LEFT);
+    player.getNodes().push(LEFT);
+    player.getNodes().push(LEFT);
+    std::cout << player.getNodes().size() << "\n";
 }
 
 void Game::Run()
@@ -52,10 +66,10 @@ void Game::processEvents()
         switch (event.type)
         {
         case sf::Event::KeyPressed:
-            handlePlayerInput(event.key.code, true);
+            // handlePlayerInput(event.key.code, true);
             break;
         case sf::Event::KeyReleased:
-            handlePlayerInput(event.key.code, false);
+            // handlePlayerInput(event.key.code, false);
             break;
         case sf::Event::Closed:
             mWindow.close();

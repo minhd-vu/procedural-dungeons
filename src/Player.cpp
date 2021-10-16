@@ -19,6 +19,12 @@ void Player::update(TileMap &map)
 {
     int x = 0, y = 0;
 
+    if (nodes.empty())
+        return;
+
+    movementFlags[nodes.front()] = true;
+    std::cout << nodes.front() << "\n";
+
     if (movementFlags[UP])
     {
         y -= speed;
@@ -35,6 +41,9 @@ void Player::update(TileMap &map)
     {
         x += speed;
     }
+
+    movementFlags[nodes.front()] = false;
+    nodes.pop();
 
     if (x && map.getTiles()[position.x + x + position.y * map.getWidth()])
     {
