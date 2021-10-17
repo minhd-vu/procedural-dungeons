@@ -23,7 +23,7 @@ void Player::update(TileMap &map)
         return;
 
     movementFlags[nodes.front()] = true;
-    std::cout << nodes.front() << "\n";
+    // std::cout << nodes.front() << "\n";
 
     if (movementFlags[UP])
     {

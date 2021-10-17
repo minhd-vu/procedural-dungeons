@@ -59,6 +59,11 @@ public:
         position.y = y;
     }
 
+    void setPosition(sf::Vector2u position)
+    {
+        this->position = position;
+    }
+
     std::queue<Direction> &getNodes()
     {
         return nodes;

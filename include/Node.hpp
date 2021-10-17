@@ -1,8 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "Game.hpp"
-
+#include <SFML/Graphics.hpp>
 class Node
 {
 public:
@@ -11,11 +10,9 @@ public:
     float g;
     float h;
     float f;
-}
+};
 
-static
-
-inline bool
+static inline bool
 operator<(const Node &l, const Node &r)
 {
     return l.f < r.f;

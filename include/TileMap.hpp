@@ -6,6 +6,11 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include "Node.hpp"
+#include <vector>
+#include <array>
+#include <limits>
+#include <float.h>
 
 // generate a tile map
 class TileMap : public sf::Drawable, public sf::Transformable
@@ -49,6 +54,7 @@ public:
                 if (tileNumber == 9)
                 {
                     tileNumber = 3;
+                    start = sf::Vector2u(i, j);
                 }
                 else if (tileNumber == 4)
                 {
@@ -103,6 +109,48 @@ public:
         return m_vertices;
     }
 
+    // a* pathfinding
+    std::vector<Node> getPath()
+    {
+        std::vector<Node> empty;
+        std::vector<std::vector<bool>> closed;
+        std::vector<std::vector<Node>> nodes;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                nodes[x][y].f = FLT_MAX;
+                nodes[x][y].g = FLT_MAX;
+                nodes[x][y].h = FLT_MAX;
+                nodes[x][y].parent.x = -1;
+                nodes[x][y].parent.y = -1;
+                nodes[x][y].position.x = x;
+                nodes[x][y].position.y = y;
+
+                closed[x][y] = false;
+            }
+        }
+
+        std::vector<Node> path;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                path.push_back(nodes[x][y]);
+            }
+        }
+
+        return path;
+    }
+
+    sf::Vector2u getStart()
+    {
+        return start;
+    }
+
+private:
     bool isValid(int x, int y)
     {
         return x >= 0 && y >= 0 && x < width && y < height && tiles[x + y * width];
@@ -118,7 +166,6 @@ public:
         return sqrt((x - goal.x) * (x - goal.x) + (y - goal.y) * (y - goal.y));
     }
 
-private:
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
     {
         // apply the transform
@@ -136,7 +183,7 @@ private:
     sf::Vector2u tileSize;
     unsigned int width, height;
     std::vector<int> tiles;
-    sf::Vector2u goal;
+    sf::Vector2u goal, start;
 };
 
 #endif //TILEMAP_H
