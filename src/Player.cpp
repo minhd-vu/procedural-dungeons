@@ -17,44 +17,7 @@ void Player::load(const std::string &filename, sf::Vector2f size)
 
 void Player::update(TileMap &map)
 {
-    int x = 0, y = 0;
-
-    if (nodes.empty())
-        return;
-
-    movementFlags[nodes.front()] = true;
-    // std::cout << nodes.front() << "\n";
-
-    if (movementFlags[UP])
-    {
-        y -= speed;
-    }
-    if (movementFlags[DOWN])
-    {
-        y += speed;
-    }
-    if (movementFlags[LEFT])
-    {
-        x -= speed;
-    }
-    if (movementFlags[RIGHT])
-    {
-        x += speed;
-    }
-
-    movementFlags[nodes.front()] = false;
-    nodes.pop();
-
-    // condense this after pathfinding has been implemented
-    if (x && map.getTiles()[position.x + x + position.y * map.getWidth()])
-    {
-        position.x += x;
-    }
-
-    if (y && map.getTiles()[position.x + (position.y + y) * map.getWidth()])
-    {
-        position.y += y;
-    }
-
+    position = path.front().position;
+    path.pop();
     sprite.setPosition(position.x * map.getTileSize().x, position.y * map.getTileSize().y);
 }

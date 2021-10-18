@@ -45,7 +45,7 @@ public:
 
     bool *getMovementFlags()
     {
-        return movementFlags;
+        return movement;
     }
 
     sf::Vector2u getPostion()
@@ -64,15 +64,15 @@ public:
         this->position = position;
     }
 
-    std::queue<Direction> &getNodes()
+    void setPath(std::queue<Node> path)
     {
-        return nodes;
+        this->path = path;
     }
 
 private:
     unsigned int speed;
-    bool movementFlags[DIRECTION_SIZE] = {false};
-    std::queue<Direction> nodes;
+    bool movement[DIRECTION_SIZE] = {false};
+    std::queue<Node> path;
     sf::Texture texture;
     sf::Sprite sprite;
     sf::Vector2u position;
