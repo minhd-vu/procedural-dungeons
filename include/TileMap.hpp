@@ -12,6 +12,7 @@
 #include <limits>
 #include <float.h>
 #include <stack>
+#include <queue>
 
 // generate a tile map
 class TileMap : public sf::Drawable, public sf::Transformable
@@ -111,9 +112,9 @@ public:
     }
 
     // a* pathfinding
-    std::vector<Node> getPath()
+    std::queue<Node> getPath()
     {
-        std::vector<Node> empty;
+        std::queue<Node> empty;
         std::vector<std::vector<bool>> closed(width, std::vector<bool>(height));
         std::vector<std::vector<Node>> nodes(width, std::vector<Node>(height));
 
@@ -145,7 +146,6 @@ public:
 
         std::vector<Node> open;
         open.emplace_back(nodes[x][y]);
-        bool found = false;
 
         while (!open.empty() && open.size() < width * height)
         {
@@ -185,8 +185,37 @@ public:
                             // found goal
                             nodes[x + dx][y + dy].parent.x = x;
                             nodes[x + dx][y + dy].parent.y = y;
-                            found = true;
-                            return makePath(nodes);
+
+                            try
+                            {
+                                int x = goal.x;
+                                int y = goal.y;
+                                std::stack<Node> stack;
+                                std::queue<Node> queue;
+
+                                while (!(nodes[x][y].parent.x == x && nodes[x][y].parent.y == y) &&
+                                       nodes[x][y].position.x != -1 && nodes[x][y].position.y != -1)
+                                {
+                                    stack.push(nodes[x][y]);
+                                    sf::Vector2i temp = sf::Vector2i(nodes[x][y].parent.x, nodes[x][y].parent.y);
+                                    x = temp.x;
+                                    y = temp.y;
+                                }
+                                stack.push(nodes[x][y]);
+
+                                while (!stack.empty())
+                                {
+                                    Node top = stack.top();
+                                    stack.pop();
+                                    queue.push(top);
+                                }
+
+                                return queue;
+                            }
+                            catch (const std::exception &e)
+                            {
+                                std::cout << e.what() << "\n";
+                            }
                         }
                         else if (closed[x + dx][y + dy] == false)
                         {
@@ -212,56 +241,7 @@ public:
             }
         }
 
-        if (found == false)
-        {
-            return empty;
-        }
-
-        std::vector<Node> path;
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                path.push_back(nodes[x][y]);
-            }
-        }
-
-        return path;
-    }
-
-    std::vector<Node> makePath(std::vector<std::vector<Node>> nodes)
-    {
-        try
-        {
-            int x = goal.x;
-            int y = goal.y;
-            std::stack<Node> stack;
-            std::vector<Node> path;
-
-            while (!(nodes[x][y].parent.x == x && nodes[x][y].parent.y == y) &&
-                   nodes[x][y].position.x != -1 && nodes[x][y].position.y != -1)
-            {
-                stack.push(nodes[x][y]);
-                sf::Vector2i temp = sf::Vector2i(nodes[x][y].parent.x, nodes[x][y].parent.y);
-                x = temp.x;
-                y = temp.y;
-            }
-            stack.push(nodes[x][y]);
-
-            while (!stack.empty())
-            {
-                Node top = stack.top();
-                stack.pop();
-                path.emplace_back(top);
-            }
-
-            return path;
-        }
-        catch (const std::exception &e)
-        {
-            std::cout << e.what() << "\n";
-        }
+        return empty;
     }
 
     sf::Vector2u getStart()
