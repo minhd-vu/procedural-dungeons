@@ -11,6 +11,7 @@
 #include <array>
 #include <limits>
 #include <float.h>
+#include <stack>
 
 // generate a tile map
 class TileMap : public sf::Drawable, public sf::Transformable
@@ -113,9 +114,10 @@ public:
     std::vector<Node> getPath()
     {
         std::vector<Node> empty;
-        std::vector<std::vector<bool>> closed;
-        std::vector<std::vector<Node>> nodes;
+        std::vector<std::vector<bool>> closed(width, std::vector<bool>(height));
+        std::vector<std::vector<Node>> nodes(width, std::vector<Node>(height));
 
+        // initialize the map
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -132,6 +134,89 @@ public:
             }
         }
 
+        // initial starting position
+        int x = start.x;
+        int y = start.y;
+        nodes[x][y].f = 0.0;
+        nodes[x][y].g = 0.0;
+        nodes[x][y].h = 0.0;
+        nodes[x][y].parent.x = x;
+        nodes[x][y].parent.y = y;
+
+        std::vector<Node> open;
+        open.emplace_back(nodes[x][y]);
+        bool found = false;
+
+        while (!open.empty() && open.size() < width * height)
+        {
+            Node node;
+            // get the minimum f cost node
+            do
+            {
+                float temp = FLT_MAX;
+                std::vector<Node>::iterator itn;
+                for (std::vector<Node>::iterator it = open.begin(); it != open.end(); it = next(it))
+                {
+                    Node n = *it;
+                    if (n.f < temp)
+                    {
+                        temp = n.f;
+                        itn = it;
+                    }
+                }
+                node = *itn;
+                open.erase(itn);
+            } while (isValid(node.position.x, node.position.y) == false);
+
+            x = node.position.x;
+            y = node.position.y;
+            closed[x][y] = true;
+
+            // for each neighbor starting from NW to SE
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    double g, h, f;
+                    if (isValid(x + dx, y + dy))
+                    {
+                        if (isGoal(x + dx, y + dy))
+                        {
+                            // found goal
+                            nodes[x + dx][y + dy].parent.x = x;
+                            nodes[x + dx][y + dy].parent.y = y;
+                            found = true;
+                            return makePath(nodes);
+                        }
+                        else if (closed[x + dx][y + dy] == false)
+                        {
+                            g = node.g + 1.0;
+                            h = calculateH(x + dx, y + dy);
+                            f = g + h;
+
+                            // check if there is better path
+                            if (nodes[x + dx][y + dy].f == FLT_MAX ||
+                                nodes[x + dx][y + dy].f > f)
+                            {
+                                // update neighbors
+                                nodes[x + dx][y + dy].f = f;
+                                nodes[x + dx][y + dy].g = g;
+                                nodes[x + dx][y + dy].h = h;
+                                nodes[x + dx][y + dy].parent.x = x;
+                                nodes[x + dx][y + dy].parent.y = y;
+                                open.emplace_back(nodes[x + dx][y + dy]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (found == false)
+        {
+            return empty;
+        }
+
         std::vector<Node> path;
 
         for (int x = 0; x < width; x++)
@@ -143,6 +228,40 @@ public:
         }
 
         return path;
+    }
+
+    std::vector<Node> makePath(std::vector<std::vector<Node>> nodes)
+    {
+        try
+        {
+            int x = goal.x;
+            int y = goal.y;
+            std::stack<Node> stack;
+            std::vector<Node> path;
+
+            while (!(nodes[x][y].parent.x == x && nodes[x][y].parent.y == y) &&
+                   nodes[x][y].position.x != -1 && nodes[x][y].position.y != -1)
+            {
+                stack.push(nodes[x][y]);
+                sf::Vector2i temp = sf::Vector2i(nodes[x][y].parent.x, nodes[x][y].parent.y);
+                x = temp.x;
+                y = temp.y;
+            }
+            stack.push(nodes[x][y]);
+
+            while (!stack.empty())
+            {
+                Node top = stack.top();
+                stack.pop();
+                path.emplace_back(top);
+            }
+
+            return path;
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << e.what() << "\n";
+        }
     }
 
     sf::Vector2u getStart()
