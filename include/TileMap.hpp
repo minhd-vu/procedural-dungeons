@@ -112,7 +112,7 @@ public:
     }
 
     // a* pathfinding
-    std::queue<Node> getPath()
+    std::queue<Node> getPath(sf::Vector2u dest)
     {
         std::queue<Node> empty;
         std::vector<std::vector<bool>> closed(width, std::vector<bool>(height));
@@ -180,16 +180,16 @@ public:
                     double g, h, f;
                     if (isValid(x + dx, y + dy))
                     {
-                        if (isGoal(x + dx, y + dy))
+                        if (isDestination(x + dx, y + dy, dest))
                         {
-                            // found goal
+                            // found destination
                             nodes[x + dx][y + dy].parent.x = x;
                             nodes[x + dx][y + dy].parent.y = y;
 
                             try
                             {
-                                int x = goal.x;
-                                int y = goal.y;
+                                int x = dest.x;
+                                int y = dest.y;
                                 std::stack<Node> stack;
                                 std::queue<Node> queue;
 
@@ -220,7 +220,7 @@ public:
                         else if (closed[x + dx][y + dy] == false)
                         {
                             g = node.g + 1.0;
-                            h = calculateH(x + dx, y + dy);
+                            h = calculateH(x + dx, y + dy, dest);
                             f = g + h;
 
                             // check if there is better path
@@ -249,20 +249,25 @@ public:
         return start;
     }
 
+    sf::Vector2u getGoal() const
+    {
+        return goal;
+    }
+
 private:
     bool isValid(int x, int y) const
     {
-        return x >= 0 && y >= 0 && x < width && y < height && tiles[x + y * width];
+        return x >= 0 && y >= 0 && x < width && y < height && tiles[x + y * width] != 2 && tiles[x + y * width];
     }
 
-    bool isGoal(int x, int y) const
+    bool isDestination(int x, int y, sf::Vector2u dest) const
     {
-        return x == goal.x && y == goal.y;
+        return x == dest.x && y == dest.y;
     }
 
-    double calculateH(int x, int y) const
+    double calculateH(int x, int y, sf::Vector2u dest) const
     {
-        return sqrt((x - goal.x) * (x - goal.x) + (y - goal.y) * (y - goal.y));
+        return sqrt((x - dest.x) * (x - dest.x) + (y - dest.y) * (y - dest.y));
     }
 
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const

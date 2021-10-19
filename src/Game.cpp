@@ -14,10 +14,8 @@ Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 
     // set the player position
     player.setPosition(map.getStart());
-    player.setPath(map.getPath());
-
     // a* pathfinding
-    // std::cout << player.getNodes().size() << "\n";
+    player.setPath(map.getPath(map.getGoal()));
 }
 
 void Game::Run()
