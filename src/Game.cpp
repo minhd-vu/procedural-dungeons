@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-const sf::Time Game::TimePerFrame = sf::seconds(1.f / 12.f);
+const sf::Time Game::TimePerFrame = sf::seconds(1.f / 8.f);
 
 Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 {

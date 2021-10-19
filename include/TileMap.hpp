@@ -177,6 +177,12 @@ public:
             {
                 for (int dy = -1; dy <= 1; dy++)
                 {
+                    // prevent from going diagonally
+                    if (abs(dx) == abs(dy))
+                    {
+                        continue;
+                    }
+                    
                     double g, h, f;
                     if (isValid(x + dx, y + dy))
                     {

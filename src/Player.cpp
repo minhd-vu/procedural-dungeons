@@ -20,6 +20,17 @@ void Player::update(TileMap &map)
 {
     if (!path.empty())
     {
+        sf::Vector2i diff = (sf::Vector2i)path.front().position - (sf::Vector2i)position;
+
+        if (diff.x == 1)
+            direction = RIGHT;
+        else if (diff.x == -1)
+            direction = LEFT;
+        else if (diff.y == 1)
+            direction = DOWN;
+        else if (diff.y == -1)
+            direction = UP;
+
         position = path.front().position;
         path.pop();
     }
