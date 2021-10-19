@@ -244,23 +244,23 @@ public:
         return empty;
     }
 
-    sf::Vector2u getStart()
+    sf::Vector2u getStart() const
     {
         return start;
     }
 
 private:
-    bool isValid(int x, int y)
+    bool isValid(int x, int y) const
     {
         return x >= 0 && y >= 0 && x < width && y < height && tiles[x + y * width];
     }
 
-    bool isGoal(int x, int y)
+    bool isGoal(int x, int y) const
     {
         return x == goal.x && y == goal.y;
     }
 
-    double calculateH(int x, int y)
+    double calculateH(int x, int y) const
     {
         return sqrt((x - goal.x) * (x - goal.x) + (y - goal.y) * (y - goal.y));
     }

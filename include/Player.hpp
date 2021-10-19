@@ -36,7 +36,7 @@ public:
         return sprite;
     }
 
-    sf::Vector2f getCenter()
+    sf::Vector2f getCenter() const
     {
         float x = sprite.getPosition().x + sprite.getGlobalBounds().width / 2.f;
         float y = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.f;
@@ -48,7 +48,7 @@ public:
         return movement;
     }
 
-    sf::Vector2u getPostion()
+    sf::Vector2u getPostion() const
     {
         return position;
     }
