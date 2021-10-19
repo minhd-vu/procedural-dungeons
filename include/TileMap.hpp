@@ -182,7 +182,7 @@ public:
                     {
                         continue;
                     }
-                    
+
                     double g, h, f;
                     if (isValid(x + dx, y + dy))
                     {

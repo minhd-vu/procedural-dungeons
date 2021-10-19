@@ -18,13 +18,15 @@ Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
     player.setPath(map.getPath(map.getGoal()));
 }
 
-void Game::Run()
+// the main game loop
+void Game::run()
 {
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
     while (mWindow.isOpen())
     {
+        // frame rate limit logic is done here
         timeSinceLastUpdate += clock.restart();
         while (timeSinceLastUpdate > TimePerFrame)
         {
@@ -32,6 +34,7 @@ void Game::Run()
             processEvents();
             update(TimePerFrame);
         }
+        // draw everything
         render();
     }
 }
@@ -42,6 +45,7 @@ void Game::processEvents()
 
     while (mWindow.pollEvent(event))
     {
+        // not used but keep in case they need to be used in the future
         switch (event.type)
         {
         case sf::Event::KeyPressed:

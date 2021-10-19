@@ -4,6 +4,6 @@ int main()
 {
 	srand(time(NULL));
 	Game game;
-	game.Run();
+	game.run();
 	return 0;
 }

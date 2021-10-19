@@ -64,32 +64,48 @@ class Rectangle:
 def get_neighbors(level: list[int], x: int, y: int) -> list[tuple[int]]:
     # get all neighbors of the given tile that are not conflicting
     neighbors = list[tuple[int]]()
+    direction = list[tuple[int]]()
 
-    # right
-    if x + 1 < size[0]:
-        neighbors.append((x + 1, y))
-    # left
-    if x - 1 >= 0:
-        neighbors.append((x - 1, y))
     # up
     if y - 1 >= 0:
-        neighbors.append((x, y - 1))
+        neighbors.append((x, y - 1, 0))
     # down
     if y + 1 < size[1]:
-        neighbors.append((x, y + 1))
+        neighbors.append((x, y + 1, 1))
+    # left
+    if x - 1 >= 0:
+        neighbors.append((x - 1, y, 2))
+    # right
+    if x + 1 < size[0]:
+        neighbors.append((x + 1, y, 3))
 
     return neighbors
 
 
-def recursive_dfs(level: list[int], x: int, y: int, init: bool = False) -> None:
+def is_level_border(level, x, y):
+    return x == 0 or x == size[0] - 1 or y == 0 or y == size[1] - 1
+
+
+def recursive_dfs(level: list[int], x: int, y: int, init: bool = False, direction: int = None) -> None:
     # recursive depth first search to determine the paths
     level[x][y] = 3
     neighbors = get_neighbors(level, x, y)
-    # choose a random direction to go in
+
     random.shuffle(neighbors)
-    for neighbor in neighbors:
-        if not level[neighbor[0]][neighbor[1]]:
-            recursive_dfs(level, neighbor[0], neighbor[1])
+
+    # choose a random direction to go in
+    if (direction is None):
+        direction = random.randrange(len(neighbors))
+    else:
+        for i in range(len(neighbors)):
+            if (neighbors[i][2] == direction):
+                direction = i
+                break
+
+    for i in range(len(neighbors)):
+        neighbor = neighbors[(i + direction) % len(neighbors)]
+        if not level[neighbor[0]][neighbor[1]] and not is_level_border(level, neighbor[0], neighbor[1]):
+            recursive_dfs(level, neighbor[0], neighbor[1], direction=neighbor[2])
             # break because we only want to go in one direction
             break
 
@@ -101,7 +117,9 @@ def find_path(level: list[int], x: int, y: int, end_x: int, end_y: int, visited:
     for neighbor in neighbors:
         if end_x == neighbor[0] and end_y == neighbor[1]:
             return True
-        elif level[neighbor[0]][neighbor[1]] and not visited[neighbor[0]][neighbor[1]]:
+        elif (level[neighbor[0]][neighbor[1]] and
+              level[neighbor[0]][neighbor[1]] != 2 and
+              not visited[neighbor[0]][neighbor[1]]):
             return find_path(level, neighbor[0], neighbor[1], end_x, end_y, visited)
     return False
 
