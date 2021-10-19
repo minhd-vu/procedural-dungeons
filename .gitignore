@@ -3,6 +3,7 @@ build
 .vscode
 __pycache__
 .DS_Store
+level.txt
 
 # Prerequisites
 *.d
