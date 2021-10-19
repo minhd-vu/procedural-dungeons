@@ -9,10 +9,10 @@
 
 enum Direction
 {
-    UP,
     DOWN,
     LEFT,
     RIGHT,
+    UP,
     DIRECTION_SIZE
 };
 
@@ -43,9 +43,9 @@ public:
         return sf::Vector2f(x, y);
     }
 
-    bool *getMovementFlags()
+    Direction getDirection() const
     {
-        return movement;
+        return direction;
     }
 
     sf::Vector2u getPostion() const
@@ -71,7 +71,7 @@ public:
 
 private:
     unsigned int speed;
-    bool movement[DIRECTION_SIZE] = {false};
+    Direction direction;
     std::queue<Node> path;
     sf::Texture texture;
     sf::Sprite sprite;

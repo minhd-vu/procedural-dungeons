@@ -8,16 +8,22 @@ void Player::load(const std::string &filename, sf::Vector2f size)
         std::cout << filename << "\n";
     }
 
-    sprite = sf::Sprite(texture);
-    float scale_x = size.x / texture.getSize().x;
-    float scale_y = size.y / texture.getSize().y;
     speed = 1;
-    sprite.setScale(sf::Vector2f(scale_x, scale_y));
+    direction = UP;
+    sprite = sf::Sprite(texture, sf::IntRect(0, direction * 32, 32, 32));
+    // float scale_x = size.x / texture.getSize().x;
+    // float scale_y = size.y / texture.getSize().y;
+    // sprite.setScale(sf::Vector2f(scale_x, scale_y));
 }
 
 void Player::update(TileMap &map)
 {
-    position = path.front().position;
-    path.pop();
+    if (!path.empty())
+    {
+        position = path.front().position;
+        path.pop();
+    }
+
+    sprite.setTextureRect(sf::IntRect((sprite.getTextureRect().left + 32) % 96, direction * 32, 32, 32));
     sprite.setPosition(position.x * map.getTileSize().x, position.y * map.getTileSize().y);
 }
