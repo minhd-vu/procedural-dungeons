@@ -29,7 +29,7 @@ public:
     {
     }
 
-    void update(TileMap &map);
+    bool update(sf::Vector2u tileSize);
 
     sf::Sprite &getSprite()
     {

@@ -14,14 +14,11 @@ LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 
 TARGET = $(BUILD_DIR)/procedural-dungeons
 
-all: level $(TARGET)
+all: $(TARGET)
 
 
 $(TARGET):
 	$(CC) $(CFLAGS) -o $@ $(SRCS) $(LIBS)
 
 clean:
-	rm -f $(OBJS) $(BUILD_DIR)/*
-
-level:
-	python3 procedural_dungeon.py level.txt
+	rm -rf $(OBJS) $(BUILD_DIR)/*

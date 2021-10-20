@@ -13,17 +13,16 @@ void Player::load(const std::string &filename, sf::Vector2f size)
     sprite = sf::Sprite(texture, sf::IntRect(0, direction * 32, 32, 32));
 
     // scaling if the sprite is too large
-    
+
     // float scale_x = size.x / texture.getSize().x;
     // float scale_y = size.y / texture.getSize().y;
     // sprite.setScale(sf::Vector2f(scale_x, scale_y));
 }
 
-void Player::update(TileMap &map)
+bool Player::update(sf::Vector2u tileSize)
 {
     if (!path.empty())
     {
-
         // set the player direction based on where they were looking last
         sf::Vector2i diff = (sf::Vector2i)path.front().position - (sf::Vector2i)position;
         if (diff.x == 1)
@@ -39,9 +38,14 @@ void Player::update(TileMap &map)
         position = path.front().position;
         path.pop();
     }
+    else
+    {
+        return true;
+    }
 
     // animation is done here
     sprite.setTextureRect(sf::IntRect((sprite.getTextureRect().left + 32) % 96, direction * 32, 32, 32));
+    sprite.setPosition(position.x * tileSize.x, position.y * tileSize.y);
 
-    sprite.setPosition(position.x * map.getTileSize().x, position.y * map.getTileSize().y);
+    return false;
 }

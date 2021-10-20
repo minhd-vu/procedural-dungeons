@@ -18,15 +18,17 @@
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
-    bool load(const std::string &tileset,
+    bool load(const std::string tileset,
               sf::Vector2u tileSize,
-              const std::string &level,
+              const std::string level,
               unsigned int width,
               unsigned int height)
     {
         this->tileSize = tileSize;
         this->width = width;
         this->height = height;
+
+        tiles.clear();
 
         std::ifstream in(level, std::ios::in);
         int number;
