@@ -5,7 +5,7 @@ const sf::Time Game::TimePerFrame = sf::seconds(1.f / 8.f);
 Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 {
     // define the level with an array of tile indices
-    player.load("images/skeleton.png", sf::Vector2f(32.f, 32.f));
+    player.load("images/birdsprite.png", sf::Vector2f(32.f, 32.f));
     view = sf::View(sf::FloatRect(0.f, 0.f, 256.f, 256.f));
     reload();
 }
@@ -16,7 +16,7 @@ void Game::reload()
     system("python3 procedural_dungeon.py level.txt");
 
     // create the tilemap from the level definition
-    if (!map.load("images/tileset.png", sf::Vector2u(32, 32), "level.txt", 50, 50))
+    if (!map.load("images/tilemap.png", sf::Vector2u(32, 32), "level.txt", 50, 50))
         return;
 
     // set the player position
