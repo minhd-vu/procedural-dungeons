@@ -21,8 +21,12 @@ void Game::reload()
 
     // set the player position
     player.setPosition(map.getStart());
+    
     // a* pathfinding
-    player.setPath(map.getPath(map.getStart(), map.getGoal()));
+    std::queue<Node> path;
+    map.getPath(map.getStart(), map.getKey(), path);
+    map.getPath(map.getKey(), map.getGoal(), path);
+    player.setPath(path);
 }
 
 // the main game loop

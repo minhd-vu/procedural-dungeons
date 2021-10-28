@@ -129,7 +129,7 @@ public:
     }
 
     // a* pathfinding
-    std::queue<Node> getPath(sf::Vector2u start, sf::Vector2u dest)
+    std::queue<Node> getPath(sf::Vector2u start, sf::Vector2u dest, std::queue<Node> &queue)
     {
         std::queue<Node> empty;
         std::vector<std::vector<bool>> closed(width, std::vector<bool>(height));
@@ -214,7 +214,7 @@ public:
                                 int x = dest.x;
                                 int y = dest.y;
                                 std::stack<Node> stack;
-                                std::queue<Node> queue;
+                                // std::queue<Node> queue;
 
                                 while (!(nodes[x][y].parent.x == x && nodes[x][y].parent.y == y) &&
                                        nodes[x][y].position.x != -1 && nodes[x][y].position.y != -1)
