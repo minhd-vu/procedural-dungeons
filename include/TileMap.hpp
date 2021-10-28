@@ -73,7 +73,7 @@ public:
                     key = sf::Vector2u(i, j);
                     break;
                 case 9:
-                    tileNumber = 3;
+                    tileNumber = 0;
                     start = sf::Vector2u(i, j);
                     break;
                 default:

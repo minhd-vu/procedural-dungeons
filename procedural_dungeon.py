@@ -145,6 +145,7 @@ def room_contains(rooms: list[Rectangle], x: int, y: int) -> bool:
     return all([not room.contains(x, y) for room in rooms])
 
 
+# ensure that therer is a path from the start to the random position
 def random_position(rooms: list[Rectangle], level, start) -> tuple[int]:
     for i in range(size[0]):
         visited = [[False for i in range(size[0])] for j in range(size[1])]
@@ -233,8 +234,7 @@ def generate_level() -> str:
     start = starts[random.randrange(len(starts))]
     level[start[0]][start[1]] = 9
 
-    # ensure that there is a path to the goal and key tile
-    
+    # generate the goal and key tile
     goal = random_position(rooms, level, start)
     key = random_position(rooms, level, start)
 
