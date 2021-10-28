@@ -82,8 +82,15 @@ def get_neighbors(level: list[int], x: int, y: int) -> list[tuple[int]]:
     return neighbors
 
 
-def is_level_border(level, x, y):
+def is_level_border(level: list[int], x: int, y: int):
     return x == 0 or x == size[0] - 1 or y == 0 or y == size[1] - 1
+
+
+def is_valid(level: list[int], x: int, y: int, values: list[int]):
+    return (
+        not level[x][y] and
+        not is_level_border(level, x, y)
+    )
 
 
 def recursive_dfs(level: list[int], x: int, y: int, init: bool = False, direction: int = None) -> None:
@@ -104,7 +111,7 @@ def recursive_dfs(level: list[int], x: int, y: int, init: bool = False, directio
 
     for i in range(len(neighbors)):
         neighbor = neighbors[(i + direction) % len(neighbors)]
-        if not level[neighbor[0]][neighbor[1]] and not is_level_border(level, neighbor[0], neighbor[1]):
+        if is_valid(level, neighbor[0], neighbor[1], [0]):
             recursive_dfs(level, neighbor[0], neighbor[1], direction=neighbor[2])
             # break because we only want to go in one direction
             break
@@ -138,11 +145,16 @@ def room_contains(rooms: list[Rectangle], x: int, y: int) -> bool:
     return all([not room.contains(x, y) for room in rooms])
 
 
-def random_goal(rooms: list[Rectangle]) -> tuple[int]:
+def random_position(rooms: list[Rectangle], level, start) -> tuple[int]:
+    visited = [[False for i in range(size[0])] for j in range(size[1])]
     rand_room = rooms[random.randrange(len(rooms))]
     x = random.randrange(rand_room.x + 1, rand_room.x + rand_room.width - 1)
     y = random.randrange(rand_room.y + 1, rand_room.y + rand_room.height - 1)
-    return (x, y)
+
+    if find_path(level, start[0], start[1], x, y, visited):
+        return (x, y)
+
+    return False
 
 
 def generate_level() -> str:
@@ -219,16 +231,15 @@ def generate_level() -> str:
     # the player will always start somewhere that is has a path
     start = starts[random.randrange(len(starts))]
     level[start[0]][start[1]] = 9
-
-    # determine the goal tile
-
-    # ensure that there is a path to the goal tile
+    
+    # ensure that there is a path to the goal and key tile
     for i in range(size[0]):
-        visited = [[False for i in range(size[0])] for j in range(size[1])]
-        goal = random_goal(rooms)
+        goal = random_position(rooms, level, start)
+        key = random_position(rooms, level, start)
 
-        if find_path(level, start[0], start[1], goal[0], goal[1], visited):
+        if goal and key and goal != key:
             level[goal[0]][goal[1]] = 4
+            level[key[0]][key[1]] = 5
             # create the text file string
             return '\n'.join([' '.join([str(i) for i in row]) for row in level])
 
