@@ -118,12 +118,12 @@ public:
         return tileSize;
     }
 
-    std::vector<int> getTiles() const
+    std::vector<int> &getTiles()
     {
         return tiles;
     }
 
-    sf::VertexArray getVertices() const
+    sf::VertexArray& getVertices()
     {
         return m_vertices;
     }

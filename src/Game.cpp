@@ -21,7 +21,7 @@ void Game::reload()
 
     // set the player position
     player.setPosition(map.getStart());
-    
+
     // a* pathfinding
     std::queue<Node> path;
     map.getPath(map.getStart(), map.getKey(), path);
@@ -77,6 +77,11 @@ void Game::update(sf::Time deltaTime)
     // TODO: Update your objects here
     if (player.update(map.getTileSize()))
         reload();
+
+    if (player.getPostion() == map.getKey())
+    {
+        std::cout << "Picked Up Egg\n";
+    }
 }
 
 void Game::render()
