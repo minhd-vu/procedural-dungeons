@@ -22,7 +22,7 @@ void Game::reload()
     // set the player position
     player.setPosition(map.getStart());
     // a* pathfinding
-    player.setPath(map.getPath(map.getGoal()));
+    player.setPath(map.getPath(map.getStart(), map.getGoal()));
 }
 
 // the main game loop

@@ -19,6 +19,10 @@ void Player::load(const std::string &filename, sf::Vector2f size)
     // sprite.setScale(sf::Vector2f(scale_x, scale_y));
 }
 
+/*
+ * Returns true if the player ai has no where else to go,
+ * otherwise false if there are still moves remaining.
+ */
 bool Player::update(sf::Vector2u tileSize)
 {
     if (!path.empty())

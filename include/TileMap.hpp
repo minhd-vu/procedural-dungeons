@@ -55,14 +55,29 @@ public:
                 int tileNumber = tiles[index];
 
                 // hardcode here to determine where the player spawns
-                if (tileNumber == 9)
+                switch (tileNumber)
                 {
+                case 0:
+                    tileNumber = 1;
+                    break;
+                case 1:
+                    tileNumber = 0;
+                    break;
+                case 3:
+                    tileNumber = 0;
+                    break;
+                case 4:
+                    goal = sf::Vector2u(i, j);
+                    break;
+                case 5:
+                    key = sf::Vector2u(i, j);
+                    break;
+                case 9:
                     tileNumber = 3;
                     start = sf::Vector2u(i, j);
-                }
-                else if (tileNumber == 4)
-                {
-                    goal = sf::Vector2u(i, j);
+                    break;
+                default:
+                    break;
                 }
 
                 // find its position in the tileset texture
@@ -114,7 +129,7 @@ public:
     }
 
     // a* pathfinding
-    std::queue<Node> getPath(sf::Vector2u dest)
+    std::queue<Node> getPath(sf::Vector2u start, sf::Vector2u dest)
     {
         std::queue<Node> empty;
         std::vector<std::vector<bool>> closed(width, std::vector<bool>(height));
@@ -262,6 +277,11 @@ public:
         return goal;
     }
 
+    sf::Vector2u getKey() const
+    {
+        return key;
+    }
+
 private:
     bool isValid(int x, int y) const
     {
@@ -295,7 +315,7 @@ private:
     sf::Vector2u tileSize;
     unsigned int width, height;
     std::vector<int> tiles;
-    sf::Vector2u goal, start;
+    sf::Vector2u start, goal, key;
 };
 
-#endif //TILEMAP_H
+#endif // TILEMAP_H
