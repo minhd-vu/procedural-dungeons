@@ -146,13 +146,14 @@ def room_contains(rooms: list[Rectangle], x: int, y: int) -> bool:
 
 
 def random_position(rooms: list[Rectangle], level, start) -> tuple[int]:
-    visited = [[False for i in range(size[0])] for j in range(size[1])]
-    rand_room = rooms[random.randrange(len(rooms))]
-    x = random.randrange(rand_room.x + 1, rand_room.x + rand_room.width - 1)
-    y = random.randrange(rand_room.y + 1, rand_room.y + rand_room.height - 1)
+    for i in range(size[0]):
+        visited = [[False for i in range(size[0])] for j in range(size[1])]
+        rand_room = rooms[random.randrange(len(rooms))]
+        x = random.randrange(rand_room.x + 1, rand_room.x + rand_room.width - 1)
+        y = random.randrange(rand_room.y + 1, rand_room.y + rand_room.height - 1)
 
-    if find_path(level, start[0], start[1], x, y, visited):
-        return (x, y)
+        if find_path(level, start[0], start[1], x, y, visited):
+            return (x, y)
 
     return False
 
@@ -228,20 +229,20 @@ def generate_level() -> str:
             level[x][y] = 2
 
     # determine where the player starts
-    # the player will always start somewhere that is has a path
+    # the player will always start somewhere that has a path
     start = starts[random.randrange(len(starts))]
     level[start[0]][start[1]] = 9
-    
-    # ensure that there is a path to the goal and key tile
-    for i in range(size[0]):
-        goal = random_position(rooms, level, start)
-        key = random_position(rooms, level, start)
 
-        if goal and key and goal != key:
-            level[goal[0]][goal[1]] = 4
-            level[key[0]][key[1]] = 5
-            # create the text file string
-            return '\n'.join([' '.join([str(i) for i in row]) for row in level])
+    # ensure that there is a path to the goal and key tile
+    
+    goal = random_position(rooms, level, start)
+    key = random_position(rooms, level, start)
+
+    if goal and key and goal != key != start:
+        level[goal[0]][goal[1]] = 4
+        level[key[0]][key[1]] = 5
+        # create the text file string
+        return '\n'.join([' '.join([str(i) for i in row]) for row in level])
 
     return generate_level()
 
