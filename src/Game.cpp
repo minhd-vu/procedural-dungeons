@@ -80,7 +80,7 @@ void Game::update(sf::Time deltaTime)
 
     if (player.getPostion() == map.getKey())
     {
-        std::cout << "Picked Up Egg\n";
+        map.removeKey();
     }
 }
 
