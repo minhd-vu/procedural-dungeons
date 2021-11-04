@@ -21,8 +21,6 @@ public:
     Game();
     void run();
     void reload();
-
-private:
     void processEvents();
     void update(sf::Time deltaTime);
     void render();
@@ -32,6 +30,7 @@ private:
     TileMap map;
     static const sf::Time TimePerFrame;
     Player player;
+    Player enemy;
 };
 
 #endif //GAME_H

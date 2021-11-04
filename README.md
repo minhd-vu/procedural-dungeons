@@ -33,6 +33,8 @@ Birb has hit her head and lost her way home! When she was going on a grocery tri
   - The enemy units are the trees. The birb cannot fly into the threes or else it will die. They will always be avoided because we are using A*.
 - [x] Implement A* path planning, you can any state representation you would like
   - A* controls the hero character.
+- [x] Have Lua script move an object (sprite, primitive, character, etc.) on the screen.
+  - Used [this tutorial](http://gamedevgeek.com/tutorials/calling-c-functions-from-lua/) for integrating lua
 
 ## Contributors
 

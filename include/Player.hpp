@@ -69,7 +69,12 @@ public:
         this->path = path;
     }
 
-private:
+    std::queue<Node> &getPath()
+    {
+        return path;
+    }
+
+protected:
     unsigned int speed;
     Direction direction;
     std::queue<Node> path;

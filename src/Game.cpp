@@ -6,6 +6,7 @@ Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 {
     // define the level with an array of tile indices
     player.load("images/birdsprite.png", sf::Vector2f(32.f, 32.f));
+    enemy.load("images/birdsprite.png", sf::Vector2f(32.f, 32.f));
     view = sf::View(sf::FloatRect(0.f, 0.f, 256.f, 256.f));
     reload();
 }
@@ -82,6 +83,10 @@ void Game::update(sf::Time deltaTime)
     {
         map.removeKey();
     }
+
+    enemy.update(map.getTileSize());
+
+    // std::cout << enemy.getPostion().x << " " << enemy.getPostion().y << "\n";
 }
 
 void Game::render()
@@ -93,6 +98,7 @@ void Game::render()
     // TODO: Draw your objects here
     mWindow.draw(map);
     mWindow.draw(player.getSprite());
+    mWindow.draw(enemy.getSprite());
 
     mWindow.display();
 }
