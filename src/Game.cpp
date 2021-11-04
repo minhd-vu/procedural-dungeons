@@ -86,7 +86,7 @@ void Game::update(sf::Time deltaTime)
 
     enemy.update(map.getTileSize());
 
-    // std::cout << enemy.getPostion().x << " " << enemy.getPostion().y << "\n";
+    std::cout << "enemy x: " << enemy.getPostion().x << " y: " << enemy.getPostion().y << "\n";
 }
 
 void Game::render()
