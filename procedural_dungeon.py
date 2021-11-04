@@ -1,6 +1,7 @@
 import sys
 import argparse
 import random
+from typing import List, Tuple
 
 # hard code the level because room size are somewhat dependent on it
 size = (50, 50)
@@ -61,10 +62,10 @@ class Rectangle:
         return f'Rectangle({self.x},{self.y},{self.width},{self.height})'
 
 
-def get_neighbors(level: list[int], x: int, y: int) -> list[tuple[int]]:
+def get_neighbors(level: List[int], x: int, y: int):
     # get all neighbors of the given tile that are not conflicting
-    neighbors = list[tuple[int]]()
-    direction = list[tuple[int]]()
+    neighbors = list()
+    direction = list()
 
     # up
     if y - 1 >= 0:
@@ -82,18 +83,18 @@ def get_neighbors(level: list[int], x: int, y: int) -> list[tuple[int]]:
     return neighbors
 
 
-def is_level_border(level: list[int], x: int, y: int):
+def is_level_border(level: List[int], x: int, y: int):
     return x == 0 or x == size[0] - 1 or y == 0 or y == size[1] - 1
 
 
-def is_valid(level: list[int], x: int, y: int, values: list[int]):
+def is_valid(level: List[int], x: int, y: int, values: List[int]):
     return (
         not level[x][y] and
         not is_level_border(level, x, y)
     )
 
 
-def recursive_dfs(level: list[int], x: int, y: int, init: bool = False, direction: int = None) -> None:
+def recursive_dfs(level: List[int], x: int, y: int, init: bool = False, direction: int = None) -> None:
     # recursive depth first search to determine the paths
     level[x][y] = 3
     neighbors = get_neighbors(level, x, y)
@@ -117,7 +118,7 @@ def recursive_dfs(level: list[int], x: int, y: int, init: bool = False, directio
             break
 
 
-def find_path(level: list[int], x: int, y: int, end_x: int, end_y: int, visited: list[bool]) -> bool:
+def find_path(level: List[int], x: int, y: int, end_x: int, end_y: int, visited: List[bool]) -> bool:
     visited[x][y] = True
     neighbors = get_neighbors(level, x, y)
 
@@ -131,7 +132,7 @@ def find_path(level: list[int], x: int, y: int, end_x: int, end_y: int, visited:
     return False
 
 
-def create_door(level: list[int], room: Rectangle) -> None:
+def create_door(level: List[int], room: Rectangle) -> None:
     for i in range(room.x, room.x + room.width):
         for j in range(room.y, room.y + room.height):
             if level[i][j] == 2 and not room.corner(i, j):
@@ -141,12 +142,12 @@ def create_door(level: list[int], room: Rectangle) -> None:
                         return
 
 
-def room_contains(rooms: list[Rectangle], x: int, y: int) -> bool:
+def room_contains(rooms: List[Rectangle], x: int, y: int) -> bool:
     return all([not room.contains(x, y) for room in rooms])
 
 
 # ensure that therer is a path from the start to the random position
-def random_room_position(rooms: list[Rectangle], level, start) -> tuple[int]:
+def random_room_position(rooms: List[Rectangle], level, start) -> Tuple[int]:
     for i in range(size[0]):
         visited = [[False for i in range(size[0])] for j in range(size[1])]
         rand_room = rooms[random.randrange(len(rooms))]
