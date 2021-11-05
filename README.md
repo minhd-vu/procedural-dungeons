@@ -35,6 +35,7 @@ Birb has hit her head and lost her way home! When she was going on a grocery tri
   - A* controls the hero character.
 - [x] Have Lua script move an object (sprite, primitive, character, etc.) on the screen.
   - Used [this tutorial](http://gamedevgeek.com/tutorials/calling-c-functions-from-lua/) for integrating lua
+  - Added ghost character that moves back and forth from tile `10` to `40` using the `move_enemy.lua` script
 
 ## Contributors
 
