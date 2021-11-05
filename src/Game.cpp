@@ -6,8 +6,8 @@ Game::Game() : mWindow(sf::VideoMode(800, 800), "Procedural Dungeons")
 {
     // define the level with an array of tile indices
     player.load("images/birdsprite.png", sf::Vector2f(32.f, 32.f));
-    enemy.load("images/birdsprite.png", sf::Vector2f(32.f, 32.f));
-    view = sf::View(sf::FloatRect(0.f, 0.f, 256.f, 256.f));
+    enemy.load("images/ghost.png", sf::Vector2f(32.f, 32.f));
+    view = sf::View(sf::FloatRect(0.f, 0.f, 512.f, 512.f));
     reload();
 }
 
