@@ -1,7 +1,4 @@
 # procedural-dungeons
-
-![Demo Video](https://github.com/minhd-vu/procedural-dungeons/blob/master/gameplay.mkv)
-
 ## Running
 ```
 make -B && ./build/procedural-dungeons
